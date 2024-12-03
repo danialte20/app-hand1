@@ -1,59 +1,35 @@
-name: TensorFlow Model Training
+name: Python CI
 
-# Menentukan kapan workflow dijalankan
 on:
   push:
     branches:
-      - main  # Workflow ini dijalankan saat ada push ke branch 'main'
+      - main
   pull_request:
     branches:
-      - main  # Atau saat ada pull request ke branch 'main'
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Menentukan runner yang digunakan
+    runs-on: ubuntu-latest
 
     steps:
-      # Langkah pertama: checkout kode dari repositori
-      - name: Checkout code
-        uses: actions/checkout@v3  # Mengambil kode dari repositori
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # Langkah kedua: setup Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8'  # Menentukan versi Python yang digunakan
+          python-version: 3.8
 
-      # Langkah ketiga: Install dependencies
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip  # Memperbarui pip
-          pip install -r requirements.txt  # Menginstal dependensi dari file requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # Langkah keempat: Install gdown untuk mengunduh dataset
-      - name: Install gdown
-        run: |
-          pip install gdown  # Install gdown untuk mengunduh file dari Google Drive
-
-      # Langkah kelima: Download dataset dari Google Drive
       - name: Download dataset from Google Drive
         run: |
-          gdown https://drive.google.com/drive/folders/1OBbH77VPhlkZ6VH2VQsXffb8tfu7nwYm?usp=sharing  # Ganti dengan ID file Anda
+          gdown --fuzzy "https://drive.google.com/file/d/1Z0ljUKM2-LqQ9kMlwZgXwxKapp9Q5onc/view?usp=sharing"
+          unzip dataset_split.zip -d ./dataset_split
 
-      # Langkah keenam: Menjalankan skrip pelatihan
-      - name: Train model
-        run: |
-          python app_modeltrain.py  # Jalankan pelatihan menggunakan dataset yang sudah diunduh
-
-      # Langkah ketujuh: Menyimpan model yang sudah dilatih
-      - name: Save trained model
-        run: |
-          mkdir -p /tmp/model
-          cp path_to_saved_model/model.keras /tmp/model/  # Menyalin model yang disimpan ke direktori sementara
-          
-      # Langkah kedelapan: Upload model ke GitHub (opsional)
-      - name: Upload model to GitHub
-        uses: actions/upload-artifact@v3
-        with:
-          name: trained-model
-          path: /tmp/model  # Mengunggah model yang telah disimpan sebagai artefak
+      - name: Run model training
+        run: python app_modeltrain.py

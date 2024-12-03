@@ -1,35 +1,43 @@
-name: Python CI
+name: Train Model
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # atau branch lain tempat Anda melakukan push
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  train_model:
+    runs-on: ubuntu-latest  # Menentukan sistem operasi yang digunakan
+    
     steps:
+      # Checkout kode dari repositori
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
+      # Set up Python environment
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: '3.8'  # Versi Python yang digunakan
 
+      # Install dependencies
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install gdown  # Instal gdown agar dapat digunakan untuk mengunduh file
 
+      # Download dataset dari Google Drive menggunakan gdown
       - name: Download dataset from Google Drive
         run: |
-          gdown --fuzzy "https://drive.google.com/file/d/1Z0ljUKM2-LqQ9kMlwZgXwxKapp9Q5onc/view?usp=sharing"
-          unzip dataset_split.zip -d ./dataset_split
+          gdown --fuzzy "https://drive.google.com/file/d/1Z0ljUKM2-LqQ9kMlwZgXwxKapp9Q5onc/view?usp=sharing" -O dataset_split.zip
 
+      # Ekstrak file dataset_split.zip
+      - name: Extract dataset
+        run: |
+          unzip dataset_split.zip -d ./dataset_split  # Ekstrak ke folder dataset
+
+      # Run model training
       - name: Run model training
-        run: python app_modeltrain.py
+        run: |
+          python app_modeltrain.py

@@ -11,9 +11,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 
-# Direktori dataset di Google Drive
-train_dir = '/content/drive/MyDrive/dataset_split/train'
-val_dir = '/content/drive/MyDrive/dataset_split/validation'
+# Path ke dataset yang sudah diunduh (pastikan path ini sesuai dengan struktur folder Anda)
+dataset_dir = './dataset_split'  # Sesuaikan dengan path tempat dataset diunduh
+
+train_dir = os.path.join(dataset_dir, 'train')
+val_dir = os.path.join(dataset_dir, 'validation')
 
 # Data augmentation untuk training dataset
 train_datagen = ImageDataGenerator(
@@ -108,7 +110,7 @@ model.compile(optimizer='adam',
 from tensorflow.keras.callbacks import ModelCheckpoint
 
 # Menyimpan model terbaik berdasarkan akurasi validasi
-checkpoint = ModelCheckpoint('/',  # Ganti dengan ekstensi .keras
+checkpoint = ModelCheckpoint('best_model.keras',  # Ganti dengan ekstensi .keras
                              save_best_only=True,
                              monitor='val_loss',  # Menyimpan model terbaik berdasarkan loss validasi
                              mode='min',
@@ -131,13 +133,13 @@ print(f'Validation Loss: {val_loss}')
 print(f'Validation Accuracy: {val_accuracy}')
 
 # Menyimpan model setelah pelatihan
-model.save('/content/drive/MyDrive/model/palmprint_model_final1.keras')
+model.save('/tmp/model/palmprint_model_final.keras')
 
 # Memuat model yang sudah dilatih
-model = load_model('/content/drive/MyDrive/model/palmprint_model_final1.keras')
+model = load_model('/tmp/model/palmprint_model_final.keras')
 
 # Memuat gambar baru untuk prediksi
-img_path = '/content/drive/MyDrive/dataset/001/001_F_L_30.JPG'  # Ganti dengan path gambar yang ingin diuji
+img_path = 'dataset_split/train/001/001_F_L_30.JPG'  # Ganti dengan path gambar yang ingin diuji
 img = image.load_img(img_path, target_size=(224, 224))
 img_array = image.img_to_array(img)
 img_array = np.expand_dims(img_array, axis=0)  # Menambah dimensi batch

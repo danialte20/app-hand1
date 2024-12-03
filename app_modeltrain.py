@@ -15,8 +15,8 @@ from sklearn.metrics import accuracy_score
 # Path ke dataset yang sudah diunduh (pastikan path ini sesuai dengan struktur folder Anda)
 dataset_dir = './dataset_split'  # Sesuaikan dengan path tempat dataset diunduh
 
-train_dir = os.path.join(dataset_dir, 'train')
-val_dir = os.path.join(dataset_dir, 'validation')
+train_dir = os.path.join(dataset_dir, './dataset_split/train')
+val_dir = os.path.join(dataset_dir, './dataset_split/validation')
 
 # Data augmentation untuk training dataset
 train_datagen = ImageDataGenerator(

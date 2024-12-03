@@ -1,31 +1,36 @@
 name: Python Application
 
+# Menentukan kapan alur kerja dijalankan
 on:
   push:
     branches:
-      - main
+      - main  # Alur kerja dijalankan saat ada perubahan di branch 'main'
   pull_request:
     branches:
-      - main
+      - main  # Atau saat ada pull request ke branch 'main'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Menentukan runner yang digunakan (ubuntu-latest di sini)
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Langkah pertama: checkout kode dari repositori
+      - name: Checkout code
+        uses: actions/checkout@v3  # Mengambil kode dari repositori
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
+      # Langkah kedua: setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'  # Menentukan versi Python yang digunakan
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      # Langkah ketiga: Install dependensi
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip  # Memperbarui pip
+          pip install -r requirements.txt  # Menginstal dependensi dari file requirements.txt
 
-    - name: Run tests
-      run: |
-        python train_app.py
+      # Langkah keempat: Menjalankan skrip atau aplikasi
+      - name: Run program
+        run: |
+          python app_modeltrain.py  # Gantilah dengan nama file Python yang sesuai, misalnya 'train_model.py'
